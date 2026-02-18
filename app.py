@@ -13,7 +13,7 @@ db_config = {
     "user": os.getenv("DB_USER", "root"),
     "password": os.getenv("DB_PASSWORD", ""),
     "database": os.getenv("DB_NAME", "catequese_db"),
-    "port": os.getenv("DB_PORT", 3306)
+    "port": int(os.getenv("DB_PORT", 3306))
 }
 
 
@@ -80,5 +80,6 @@ def index():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
 
