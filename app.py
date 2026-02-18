@@ -80,13 +80,14 @@ def index():
         cursor.close()
         conexao.close()
 
-        return "<h3>Inscrição salva com sucesso no banco MySQL!</h3>"
+        return "<h3>Inscrição salva com sucesso!</h3>"
 
     return render_template('index.html')
 
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
 
 
