@@ -18,7 +18,24 @@ db_config = {
 
 
 def conectar_db():
-    return mysql.connector.connect(**db_config)
+    host = os.getenv("DB_HOST")
+    user = os.getenv("DB_USER")
+    password = os.getenv("DB_PASSWORD")
+    database = os.getenv("DB_NAME")
+    port = os.getenv("DB_PORT")
+
+    print("HOST:", host)
+    print("USER:", user)
+    print("DATABASE:", database)
+    print("PORT:", port, type(port))
+
+    return mysql.connector.connect(
+        host=host,
+        user=user,
+        password=password,
+        database=database,
+        port=int(port) if port else 3306
+    )
 
 
 # ==============================
@@ -80,6 +97,7 @@ def index():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
 
 
