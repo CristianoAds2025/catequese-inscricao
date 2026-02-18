@@ -36,7 +36,7 @@ def index():
     if request.method == 'POST':
 
         nome = request.form.get('nome')
-        data_nascimento = request.form.get('data_nascimento')
+        data_nascimento = request.form.get('data_nascimento') or None
         idade = request.form.get('idade')
         sexo = request.form.get('sexo')
         serie = request.form.get('serie')
@@ -51,7 +51,8 @@ def index():
         qual_paroquia = request.form.get('qual_paroquia')
         batizado = request.form.get('batizado')
         nome_responsavel_termo = request.form.get('nome_responsavel_termo')
-        data_preenchimento = request.form.get('data_preenchimento')
+        data_preenchimento = request.form.get('data_preenchimento') or None
+
 
         conexao = conectar_db()
         cursor = conexao.cursor()
@@ -86,6 +87,7 @@ def index():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
 
 
