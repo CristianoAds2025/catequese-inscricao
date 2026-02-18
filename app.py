@@ -1,35 +1,82 @@
 from flask import Flask, render_template, request
+import mysql.connector
 import os
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = 'uploads'
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+# ==============================
+# CONFIGURAÇÃO DO BANCO
+# ==============================
 
+db_config = {
+    "host": os.getenv("DB_HOST", "localhost"),
+    "user": os.getenv("DB_USER", "root"),
+    "password": os.getenv("DB_PASSWORD", ""),
+    "database": os.getenv("DB_NAME", "catequese_db")
+}
+
+
+def conectar_db():
+    return mysql.connector.connect(**db_config)
+
+
+# ==============================
+# ROTA PRINCIPAL
+# ==============================
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
 
         nome = request.form.get('nome')
+        data_nascimento = request.form.get('data_nascimento')
+        idade = request.form.get('idade')
+        sexo = request.form.get('sexo')
+        serie = request.form.get('serie')
+        turma = request.form.get('turma')
         email = request.form.get('email')
+        celular = request.form.get('celular')
+        whatsapp = request.form.get('whatsapp')
+        mae = request.form.get('mae')
+        pai = request.form.get('pai')
+        responsavel = request.form.get('responsavel')
+        participa_paroquia = request.form.get('participa_paroquia')
+        qual_paroquia = request.form.get('qual_paroquia')
+        batizado = request.form.get('batizado')
+        nome_responsavel_termo = request.form.get('nome_responsavel_termo')
+        data_preenchimento = request.form.get('data_preenchimento')
 
-        documentos = request.files.get('documentos')
-        foto = request.files.get('foto')
+        conexao = conectar_db()
+        cursor = conexao.cursor()
 
-        if documentos:
-            documentos.save(os.path.join(app.config['UPLOAD_FOLDER'], documentos.filename))
+        sql = """
+        INSERT INTO inscricoes (
+            nome, data_nascimento, idade, sexo, serie, turma,
+            email, celular, whatsapp, mae, pai, responsavel,
+            participa_paroquia, qual_paroquia, batizado,
+            nome_responsavel_termo, data_preenchimento
+        )
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
 
-        if foto:
-            foto.save(os.path.join(app.config['UPLOAD_FOLDER'], foto.filename))
+        valores = (
+            nome, data_nascimento, idade, sexo, serie, turma,
+            email, celular, whatsapp, mae, pai, responsavel,
+            participa_paroquia, qual_paroquia, batizado,
+            nome_responsavel_termo, data_preenchimento
+        )
 
-        print(f"Nova inscrição recebida: {nome} - {email}")
+        cursor.execute(sql, valores)
+        conexao.commit()
 
-        return "<h3>Inscrição enviada com sucesso!</h3>"
+        cursor.close()
+        conexao.close()
+
+        return "<h3>Inscrição salva com sucesso no banco MySQL!</h3>"
 
     return render_template('index.html')
 
 
 if __name__ == '__main__':
     app.run(debug=True)
+
