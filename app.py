@@ -37,7 +37,8 @@ def index():
 
         nome = request.form.get('nome')
         data_nascimento = request.form.get('data_nascimento') or None
-        idade = request.form.get('idade')
+        idade = request.form.get('idade') or None
+        idade = int(idade) if idade else None
         sexo = request.form.get('sexo')
         serie = request.form.get('serie')
         turma = request.form.get('turma')
@@ -87,6 +88,7 @@ def index():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
 
 
