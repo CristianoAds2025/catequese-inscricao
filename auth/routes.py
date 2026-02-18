@@ -5,9 +5,6 @@ import bcrypt
 
 auth_bp = Blueprint('auth', __name__)
 
-from flask import render_template, session, redirect, url_for
-from database import get_connection
-
 @auth.route('/admin')
 def admin():
     if 'usuario' not in session:
@@ -23,6 +20,12 @@ def admin():
     conn.close()
 
     return render_template('admin.html', usuarios=usuarios)
+
+
+@auth_bp.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('auth.login'))
 
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
